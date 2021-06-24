@@ -30,7 +30,6 @@ from src.editor import Editor, RaceEditor
 from src.predictors.imdb.imdb_dataset_reader import ImdbDatasetReader
 from src.predictors.newsgroups.newsgroups_dataset_reader import NewsgroupsDatasetReader
 from src.predictors.race.race_dataset_reader import RaceDatasetReader
-from src.predictors.buggy_race.buggy_race_dataset_reader import BuggyRaceDatasetReader
 
 logger = logging.getLogger("my-logger")
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"

@@ -45,7 +45,7 @@ This repository contains code for our paper, [Explaining NLP Models via Minimal 
 1. **Download Task Data**: If you want to work with the RACE dataset, download it here: [Link](https://www.cs.cmu.edu/~glai1/data/race/). 
 The commands below assume that this data, after downloaded, is stored in `data/RACE/`. 
 All other task-specific datasets are automatically downloaded by the commands below.
-2. **Download Pretrained Models**: Download Pretrained Models by running:
+2. **Download Pretrained Models**: You can download pretrained models by running:
 
     ```bash
     bash download_models.sh
@@ -59,6 +59,14 @@ All other task-specific datasets are automatically downloaded by the commands be
 4. **Generate Edits**: Run the following command to generate edits for a particular task with our pretrained editor. It will write edits to `results/{TASK}/edits/{STAGE2EXP}/edits.csv`.
 
         python run_stage_two.py -task {TASK} -stage2_exp {STAGE2EXP} -editor_path results/{TASK}/editors/mice/{TASK}_editor.pth
+        
+      
+      For instance, to generate edits for the IMDB task, the following command will save edits to `results/imdb/edits/mice_binary/edits.csv`:
+      
+      ```bash
+      python run_stage_two.py -task imdb -stage2_exp mice_binary -editor_path results/imdb/editors/mice/imdb_editor.pth
+      ```
+      
       
 4. **Inspect Edits**: Inspect these edits with the demo notebook `notebooks/evaluation.ipynb`.
 
@@ -71,7 +79,7 @@ All other task-specific datasets are automatically downloaded by the commands be
 We use AllenNLP to train our Predictor models. Code for training Predictors can be found in `src/predictors/`. 
 See `run_all.sh` for commands used to train Predictors, which will save models to subfolders in `trained_predictors`.
 
-Alternatively, you can work with models downloaded from TODO.
+Alternatively, you can work with our pretrained models, which you can download with `download_models.sh`.
 
 
 ### Training Editors
@@ -81,9 +89,9 @@ The following command will train an editor (i.e. run Stage 1 of MiCE) for a part
 
 
 ### Generating Edits
-The following command will find MiCE edits (i.e. run Stage 2 of MiCE) for a particular task. It saves edits to `results/{TASK}/edits/{STAGE2EXP}/edits.csv`.
+The following command will find MiCE edits (i.e. run Stage 2 of MiCE) for a particular task. It saves edits to `results/{TASK}/edits/{STAGE2EXP}/edits.csv`. `-editor_path` determines the Editor model to use. Defaults to our pretrained Editor.
 
-    python run_stage_two.py -task {TASK} -stage2_exp {STAGE2EXP} 
+    python run_stage_two.py -task {TASK} -stage2_exp {STAGE2EXP} -editor_path results/{TASK}/editors/mice/{TASK}_editor.pth
 
 
 ### Inspecting Edits
@@ -99,11 +107,11 @@ Follow the steps below to extend this repo for your own task.
 
 3.  **Train Predictor**: Create a training config (see `src/predictors/imdb/imdb_roberta.json` for an example). Then train the Predictor using AllenNLP (see above commands or commands in `run_all.sh` for examples).
 
-4.  **Train Editor Model**: Depending on the task, you may have to create a new `StageOneDataset` subclass (see `RaceStageOneDataset` in `src/dataset.py` for an example of how to inherent from `StageOneDataset`). 
+4.  **Train Editor Model**: Depending on the task, you may have to create a new `StageOneDataset` subclass (see `RaceStageOneDataset` in `src/dataset.py` for an example of how to inherit from `StageOneDataset`). 
     - For classification tasks, the existing base `StageOneDataset` class should work.
     - For new multiple-choice QA tasks with dataset readers patterned after the `RaceDatasetReader` (`src/predictors/race/race_dataset_reader.py`), the existing `RaceStageOneDataset` class should work.
 
-5.  **Generate Edits**: Depending on the task, you may have to create a new `Editor` subclass (see `RaceEditor` in `src/editor.py` for an example of how to inherent from `Editor`). 
+5.  **Generate Edits**: Depending on the task, you may have to create a new `Editor` subclass (see `RaceEditor` in `src/editor.py` for an example of how to inherit from `Editor`). 
     - For classification tasks, the existing base `Editor` class should work. 
     - For multiple-choice QA with dataset readers patterned after `RaceDatasetReader`, the existing `RaceEditor` class should work. 
 

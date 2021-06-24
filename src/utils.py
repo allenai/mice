@@ -30,8 +30,6 @@ from src.predictors.imdb.imdb_dataset_reader import ImdbDatasetReader
 from src.predictors.newsgroups.newsgroups_dataset_reader \
         import NewsgroupsDatasetReader
 from src.predictors.race.race_dataset_reader import RaceDatasetReader
-from src.predictors.buggy_race.buggy_race_dataset_reader \
-        import BuggyRaceDatasetReader
 from src.masker import Masker, RandomMasker, GradientMasker
 
 logger = logging.getLogger(__name__)
@@ -47,9 +45,9 @@ def get_shared_parsers():
 
     meta_parser = argparse.ArgumentParser()
     meta_parser.add_argument("-task", required=True, 
-            help='Name of task. Currently, only RACE (including buggy RACE), \
-                    IMDB, and Newsgroups are supported.', 
-            choices=['race', 'imdb', 'newsgroups', 'buggy_race'])
+            help='Name of task. Currently, only RACE, IMDB, \
+                    and Newsgroups are supported.', 
+            choices=['race', 'imdb', 'newsgroups'])
     meta_parser.add_argument("-results_dir", default="results", 
             help='Results dir. Where to store results.')
 
@@ -174,7 +172,7 @@ def write_args(args_path, args):
 ####################################################################
 
 def get_dataset_reader(task, predictor):
-    task_options = ["imdb", "race", "newsgroups", "buggy_race"]
+    task_options = ["imdb", "race", "newsgroups"]
     if task not in task_options:
         raise NotImplementedError(f"Task {task} not implemented; \
                 must be one of {task_options}")
@@ -188,8 +186,6 @@ def get_dataset_reader(task, predictor):
         return NewsgroupsDatasetReader(
                 token_indexers=predictor._dataset_reader._token_indexers, 
                 tokenizer=predictor._dataset_reader._tokenizer)
-    elif task == "buggy_race":
-        return BuggyRaceDatasetReader()
 
 def format_classif_input(inp, label):
     return "label: " + label + ". input: " + inp 
@@ -202,7 +198,7 @@ def format_multiple_choice_input(context, question, options, answer_idx):
     return formatted_str
 
 def load_predictor(task, predictor_folder="trained_predictors/"):
-    task_options = ["imdb", "race", "newsgroups", "buggy_race"]
+    task_options = ["imdb", "race", "newsgroups"]
     if task not in task_options:
         raise NotImplementedError(f"Task {task} not implemented; \
                 must be one of {task_options}")
@@ -215,7 +211,6 @@ def load_predictor(task, predictor_folder="trained_predictors/"):
         "imdb": ImdbDatasetReader,
         "newsgroups": NewsgroupsDatasetReader,
         "race": RaceDatasetReader,
-        "buggy_race": BuggyRaceDatasetReader,
     }
 
     cuda_device = 0 if torch.cuda.is_available() else -1

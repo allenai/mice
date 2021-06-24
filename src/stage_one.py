@@ -102,7 +102,7 @@ def get_datasets(predictor, dr, masker, data_dir, train_inputs, val_inputs,
         logger.info(f"Target label (options are 'pred' or 'gold'): " + \
                 f"{args.misc.target_label}")
         # For RACE, pass dr to create_inputs() to correctly truncate
-        if args.meta.task == "race" or args.meta.task == "buggy_race":
+        if args.meta.task == "race":
             train_dataset = RaceStageOneDataset(editor_tokenizer, 
                     max_length=args.model.model_max_length)
             train_dataset.create_inputs(dr, train_inputs, train_labels, 
@@ -160,7 +160,7 @@ def get_task_data(args, dr):
     """ Helper function for loading original data of task. 
     Calls get_inputs() function of dataset reader dr """
 
-    if args.meta.task == 'race' or args.meta.task == "buggy_race":
+    if args.meta.task == 'race':
         strings = dr.get_inputs('train')
         labels = [int(s['answer_idx']) for s in strings]
     elif args.meta.task == "newsgroups" or args.meta.task == "imdb":
