@@ -96,13 +96,13 @@ def get_stage_two_parsers():
     generation_parser.add_argument("-no_repeat_ngram_size", default=2)
     
     search_parser = argparse.ArgumentParser()
-    search_parser.add_argument("-max_mask_frac", default=0.55, 
+    search_parser.add_argument("-max_mask_frac", default=0.55, type=float,
             help="Maximum mask fraction")
-    search_parser.add_argument("-max_edit_rounds", default=3, 
+    search_parser.add_argument("-max_edit_rounds", default=3, type=int,
             help="Maximum number of edit rounds")
-    search_parser.add_argument("-max_search_levels", default=4, 
+    search_parser.add_argument("-max_search_levels", default=4, type=int,
             help="Maximum number of search levels")
-    search_parser.add_argument("-beam_width", default=3, 
+    search_parser.add_argument("-beam_width", default=3, type=int,
             help="Beam width for beam search over edits.")
     search_parser.add_argument("-search_method", default="binary", 
             choices=["binary", "linear"], 
